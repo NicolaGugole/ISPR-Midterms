@@ -7,13 +7,14 @@ import os
 from sift import *
 
 # for reproducibility of resulting images --> python .\qualitative_compare.py 2 0 100
-# ugly and repetitive code for qualitative comparison (shame on me)
+# stupidly ugly and repetitive code for qualitative comparison (shame on me)
 
 # interestingly enough (found toying around) is that among the most 5 highest responsive kp for the image of the woman, 4 are about the eyes
 
 imgNames = ["2_6_s.bmp","6_12_s.bmp"] # tree - woman
 color=(255,0,0)
 bar_color = ['b','g']
+title_fontsize = 20
 
 # ------------------------------------------------------------------------------------------------------------------ #
 
@@ -32,11 +33,13 @@ for i in range(len(imgNames)):
     to_draw = int(sys.argv[1])
     cv2.drawKeypoints(grayImg,[kp[to_draw]],img, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS, color=color)
     ax[i][0].imshow(img)
+    ax[i][0].set_xticks([])
+    ax[i][0].set_yticks([])
     ax[i][1].bar(range(len(des[to_draw])),des[to_draw], color=bar_color[i])
 # for fullscreen
 figManager = plt.get_current_fig_manager() 
 figManager.full_screen_toggle()
-fig.suptitle(f"High response keypoint")
+fig.suptitle(f"High response keypoint", fontsize=title_fontsize)
 plt.show(block=False)
 
 # ------------------------------------------------------------------------------------------------------------------ #
@@ -50,18 +53,20 @@ for i in range(len(imgNames)):
     grayImg = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # Detect
     kp, des = sift.detectAndCompute(grayImg, None)
-    sorted_kp_des = sorted(zip(kp,des), key=lambda x : x[0].size, reverse=True) # order based on size (Higher = Better)
+    sorted_kp_des = sorted(zip(kp,des), 
+        key=lambda x : x[0].size, reverse=True) # order based on size (Higher = Better)
     kp = [x for x,_ in sorted_kp_des]
     des = [x for _,x in sorted_kp_des]
-    to_draw = int(sys.argv[2])
-    cv2.drawKeypoints(grayImg,[kp[to_draw]],img, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS, color=color)
+    to_draw = 0 # biggest keypoint
+    cv2.drawKeypoints(grayImg,[kp[to_draw]],img, 
+        flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS, color=color)
     # preparing for plot
     ax[i][0].imshow(img)
-    ax[i][1].bar(range(len(des[to_draw])),des[to_draw], color=bar_color[i])
-# for fullscreen
-figManager = plt.get_current_fig_manager()
-figManager.full_screen_toggle()
-fig.suptitle(f"Biggest size keypoint")
+    ax[i][0].set_xticks([])
+    ax[i][0].set_yticks([])
+    ax[i][1].bar(range(len(des[to_draw])),
+        des[to_draw], color=bar_color[i])
+fig.suptitle(f"Biggest size keypoint", fontsize=title_fontsize)
 plt.show(block=False)
 
 # ------------------------------------------------------------------------------------------------------------------ #
@@ -83,10 +88,12 @@ for i in range(len(imgNames)):
     cv2.drawKeypoints(grayImg,[kp[to_draw]],img, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS, color=color)
     # preparing for plot
     ax[i][0].imshow(img)
+    ax[i][0].set_xticks([])
+    ax[i][0].set_yticks([])
     ax[i][1].bar(range(len(des[to_draw])),des[to_draw], color=bar_color[i])
     # ax[i][1].set_title(to_draw)
 # for fullscreen
 figManager = plt.get_current_fig_manager()
 figManager.full_screen_toggle()
-fig.suptitle(f"Not so descriptive keypoint")
+fig.suptitle(f"Not so descriptive keypoint", fontsize=title_fontsize)
 plt.show(block=True)

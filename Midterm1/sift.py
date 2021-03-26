@@ -18,6 +18,7 @@ def siftImg(img):
     cv2.drawKeypoints(grayImg,kp,resultImg, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     return kp, des, resultImg
 
+# not used in the project but actually cool: can be used to plot all descriptors from 2 images side by side and get the avg distance between them
 def showMatchedHist(matches,des1,des2,img1=None,kp1=None,img2=None,kp2=None,verbose=False):
 
     # showing only the descriptors histograms or also the matched images
@@ -91,14 +92,13 @@ def compareHists(matches,des1,des2):
 
 # plots result img with its descriptors as histo
 def showResult(img,des,figname,block=True):
-    fig, ax = plt.subplots(nrows=1, ncols=2)
-    ax[0].imshow(img)
-    des = copy.deepcopy(np.random.permutation(des)[:10]) # getting 10 random descriptors
+    plt.imshow(img)
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
+    des = np.random.permutation(des)[:10] # getting 10 random descriptors
     for d in des:
-        ax[1].bar(range(len(d)),d)
-    fig.canvas.set_window_title(figname) 
-    figManager = plt.get_current_fig_manager()
-    figManager.full_screen_toggle()
+        plt.bar(range(len(d)),d)
     plt.show(block=block)
 
 # analyzes imgs following the nMatches nearest matches 
